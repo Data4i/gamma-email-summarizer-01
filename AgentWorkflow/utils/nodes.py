@@ -60,7 +60,6 @@ async def transcribe_youtube_video(state: State):
     """
     print('transcribe youtube video')
     try:
-        tsp = YouTubeTranscriptApi()
         transcript = YouTubeTranscriptApi(
                 proxy_config=WebshareProxyConfig(
             proxy_username="qojeceia",
