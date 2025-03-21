@@ -293,6 +293,7 @@ watchfiles==1.0.4
 wcwidth==0.2.13
 webcolors==24.11.1
 webencodings==0.5.1
+webshareproxy==0.0.10
 websocket-client==1.8.0
 websockets==15.0
 wrapt==1.17.2

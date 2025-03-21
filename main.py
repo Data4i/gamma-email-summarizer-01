@@ -70,3 +70,6 @@ async def get_audio():
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Agentic Email Summarizer API!😶‍🌫️"}
+
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=port)

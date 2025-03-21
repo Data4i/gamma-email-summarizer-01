@@ -1,3 +1,4 @@
+from youtube_transcript_api.proxies import WebshareProxyConfig
 from AgentWorkflow.utils.state import State
 from AgentWorkflow.utils.model import llm
 from langchain_community.tools import YouTubeSearchTool
@@ -19,6 +20,7 @@ async def get_video_url(state: State):
     Returns:
         str: A YouTube video URL, or None if no results are found.
     """
+    print("get video url")
     refined_query = state['video_name'].replace(",", " ")+", 1"
     tool = YouTubeSearchTool()
     result = tool.run(refined_query)
@@ -41,6 +43,7 @@ async def get_video_id_from_url(state: State) -> str:
     Returns:
         str: The extracted video ID, or None if not found.
     """
+    print("get video id from url")
     match = re.search(r"(?:v=|\/embed\/|\/v\/|\/vi\/|youtu\.be\/|\/e\/|watch\?v=|&v=)([a-zA-Z0-9_-]{11})", state['url'])
     return {"video_id": match.group(1)} if match else {"video_id": None}
 
@@ -55,8 +58,15 @@ async def transcribe_youtube_video(state: State):
     Returns:
         str: The transcript text, or an error message if unavailable.
     """
+    print('transcribe youtube video')
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(state['video_id'])
+        tsp = YouTubeTranscriptApi()
+        transcript = YouTubeTranscriptApi(
+                proxy_config=WebshareProxyConfig(
+            proxy_username="qojeceia",
+            proxy_password="ze0fe6rqefkf",
+        )
+            ).get_transcript(state['video_id'])
         transcript_text = " ".join([entry["text"] for entry in transcript])
         return {"transcript": transcript_text}
     except Exception as e:
@@ -80,6 +90,7 @@ async def get_video_summary(state: State):
         dict: A dictionary containing the summary of the video 
               with the key 'summary'.
     """
+    print("get video summary")
     summarizer_prompt = """
     You are a video summarizer that summarizes YouTube video transcripts. 
     Given this transcription: {transcription}
@@ -104,6 +115,7 @@ async def generate_audio_summary(state: State):
     Returns:
         dict: Dictionary containing the filename of the generated audio file.
     """
+    print("get audio summary")
     summary_text = state["summary"]
     
     if not summary_text:
